@@ -11,7 +11,7 @@ import SwiftUI
 struct notices_blogApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NoticesList()
         }
     }
 }
