@@ -21,6 +21,7 @@ struct DetailedNotice: View {
             
 
         }
+        Comments(bodyNoticeId: .constant(String(notices.noticeId)))
     }
 }
 
