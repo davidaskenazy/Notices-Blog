@@ -25,6 +25,7 @@ struct Comments: View {
         }.onAppear(){
             Api().getCommentsById(completion: {comment in
                 self.comment = comment}, bodyNoticeId: bodyNoticeId)
+          
         }
         .navigationBarTitle(Text("Comments"))
         }
