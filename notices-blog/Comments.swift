@@ -10,8 +10,15 @@ import SwiftUI
 struct Comments: View {
     @State var comment: [Comment] = []
     @Binding var bodyNoticeId:String
+    
+
+    
+    
+    //
     var body: some View {
         NavigationView{
+                
+                VStack{
         List{
             ForEach(Array(comment.enumerated()), id: \.offset){index,notices in
             HStack{
@@ -21,6 +28,7 @@ struct Comments: View {
                 }.frame(maxWidth:.infinity, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
      
             }
+                
             }
         }.onAppear(){
             Api().getCommentsById(completion: {comment in
@@ -28,8 +36,20 @@ struct Comments: View {
           
         }
         .navigationBarTitle(Text("Comments"))
+                    
+                    newComments( idComment: .constant(Int(bodyNoticeId)!))
+     
+            
+            //Inicio FORM
+
+            }
         }
        
     }
 }
 
+struct Comments_Previews: PreviewProvider {
+    static var previews: some View {
+        Comments( bodyNoticeId: .constant("1"))
+    }
+}

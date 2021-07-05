@@ -63,6 +63,21 @@ class Api{
         .resume()
     }
     
+    func getCantComments(completion: @escaping (Int) -> ()){
+        guard let url = URL(string: "http://localhost:3000/comments") else {
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { (data, _, _) in
+            let comment = try! JSONDecoder().decode([Comment].self, from:data!)
+           
+            DispatchQueue.main.async {
+                completion(comment.count)
+            }
+        }
+        .resume()
+    }
+    
     //BODY NOTICE BY ID
     
     func getBodyNoticeById(completion: @escaping (BodyNotice) -> (), idNotice:String){
@@ -98,61 +113,10 @@ class Api{
         .resume()
         
     }
-    // Agregar Comentario
-    // Bien ya qu esta todo relacionado por PK y FK VOY A TENER QUE CONSULTAR DE FORMA GENERAL EL ULTIMO ID PARA AL ADICIONARLE
-    // UNO PARA QUE MANTENGA LA RELACION
-    // NO ES LA MEJOR PRACTICA PERO PREFIERO CENTRARME EN OTRAS COSAS AHORA
-    func getComments(completion: @escaping ([Comment]) -> ()){
-        guard let url = URL(string: "http//localhost:3000/comments") else{
-            return
-        }
-        URLSession.shared.dataTask(with:url){(data,_,_) in
-            let allComments = try! JSONDecoder().decode([Comment].self, from:data!)
-            print(allComments)
-            DispatchQueue.main.async {
-                completion(allComments)
-            }
-        }
-        .resume()
-        
-    }
-    
-    /*
-     let id : Int
-     let alias : String
-     let comment: String
-     let bodyNoticeId : Int
-     */
-    //POST COMMENT
-    func postComment(){
-        
-      
-        //var ASBD: AudioStreamBasicDescription! = AudioStreamBasicDescription()
 
-        var json: Comment = Comment(id: 10, alias: "test", comment: "this is a comment", bodyNoticeId: 1)
-
-        let jsonData = try? JSONSerialization.data(withJSONObject: json)
-        
-        let url = URL(string: "http://localhost:3000/comments")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        request.httpBody = jsonData
-        let task = URLSession.shared.dataTask(with: request){ data,response, error in
-            guard let data = data, error == nil else{
-                print(error?.localizedDescription ?? "No data")
-                return
-            }
-            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
-            if let responseJSON = responseJSON as? Comment{
-                print(responseJSON)
-            }
-        }
-        task.resume()
-        
-    }
     
-    func postMethod() {
+    
+    func postComment(idComment:Int, aliasComment:String, textComment:String, bodyNoticeId:Int) {
             guard let url = URL(string: "http://localhost:3000/comments") else {
                 print("Error: cannot create URL")
                 return
@@ -161,7 +125,7 @@ class Api{
        
             
             // Add data to the model
-            let uploadDataModel = Comment(id: 10, alias: "test", comment: "this is a comment", bodyNoticeId: 1)
+            let uploadDataModel = Comment(id: idComment, alias: aliasComment, comment: textComment, bodyNoticeId: bodyNoticeId)
             
             // Convert model to JSON data
             guard let jsonData = try? JSONEncoder().encode(uploadDataModel) else {
